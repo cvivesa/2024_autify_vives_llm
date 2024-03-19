@@ -1,7 +1,7 @@
 import functools
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -18,6 +18,7 @@ def register():
         if openai_api_key is None:
             openai_api_key = ""
         db = get_db()
+        cursor = db.cursor()
         error = None
 
         if not username:
@@ -27,7 +28,7 @@ def register():
 
         if error is None:
             try:
-                db.execute(
+                cursor.execute(
                     "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password)),
                 )
@@ -37,12 +38,16 @@ def register():
                 error = f"User {username} is already registered."
             else:
                 # grab user key and add to user settings
-                user = get_db().execute(
-                    'SELECT * FROM user WHERE username = ?', (username,)
-                ).fetchone()
+                user = cursor.lastrowid
                 db.execute(
                     "INSERT INTO user_settings (id, openai_key) VALUES (?, ?)",
-                    (user['id'], openai_api_key),
+                    (user, openai_api_key),
+                )
+
+                # insert GPT3.5 as a default model for all users
+                db.execute(
+                    "INSERT INTO user_models (id, model_name, is_custom) VALUES (?, ?, ?)",
+                    (user, "gpt-3.5", True),
                 )
                 db.commit()
                 return redirect(url_for("auth.login"))
@@ -61,7 +66,6 @@ def login():
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
-
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
@@ -70,6 +74,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
+            current_app.logger.info(session)
             return redirect(url_for('index'))
 
         flash(error)

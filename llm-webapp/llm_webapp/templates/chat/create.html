@@ -6,8 +6,14 @@
 
 {% block content %}
   <form method="post">
+    <label for="model">Model</label>
+    <select name="model" id="model">
+      {% for model in models %}
+        <option value="{{ model.model_name }}" {% if loop.first %}selected{% endif %}>{{ model.model_name }}</option>
+      {% endfor %}
+    </select>
     <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    <textarea name="body" id="body">{{ request.form.body }}</textarea>
     <input type="submit" value="Save">
   </form>
 {% endblock %}

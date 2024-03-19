@@ -1,8 +1,14 @@
 import os
-
 from flask import Flask
+import logging
+from markupsafe import Markup
 
+
+def nl2br(value):
+    return Markup(value.replace('\n', '<br>\n'))
 def create_app(test_config=None):
+
+    logging.basicConfig(level=logging.DEBUG)
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -36,4 +42,6 @@ def create_app(test_config=None):
     from . import user_settings
     app.register_blueprint(user_settings.bp)
     app.add_url_rule('/user_settings', endpoint='user_settings.openai_settings')
+
+    app.jinja_env.filters['nl2br'] = nl2br
     return app

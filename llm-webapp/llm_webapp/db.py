@@ -56,6 +56,10 @@ def init_db():
             "INSERT INTO chat_entry (chat_entry_id, chat_id, type, body) VALUES (?, ?, ?, ?)",
             (4, 2, "system", "System.out.println('Hello World)"),
         )
+        db.execute(
+            "INSERT INTO user_models (model_id, id, model_name, is_custom) VALUES (?, ?, ?, ?)",
+            (1, 1, "gpt-3.5", True),
+        )
         db.commit()
 
 

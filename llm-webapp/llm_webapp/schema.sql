@@ -29,3 +29,11 @@ CREATE TABLE user_settings (
     openai_key TEXT ,
     FOREIGN KEY (id) REFERENCES user (id)
 );
+
+CREATE TABLE user_models (
+  model_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL,
+  model_name TEXT NOT NULL,
+  is_custom BOOLEAN NOT NULL,
+  FOREIGN KEY (id) REFERENCES user (id)
+);

@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app
 )
 from werkzeug.exceptions import abort
 
@@ -17,7 +17,6 @@ def user_settings():
 @bp.route('/user_settings/openai_settings',  methods=['GET', 'POST'])
 @login_required
 def openai_settings():
-    saved_key = False
     if request.method == 'POST':
         api_key = request.form['openai_key']
         error = None
@@ -29,14 +28,29 @@ def openai_settings():
             flash(error)
         else:
             db = get_db()
-            db.execute(
-                'UPDATE user_settings SET openai_key = ?'
+            curr_key = db.execute(
+                'SELECT openai_key'
+                ' FROM user_settings'
                 ' WHERE id = ?',
-                (api_key, g.user['id'])
-            )
+                (g.user['id'],)
+            ).fetchone()
+
+            if curr_key is None:
+                db.execute(
+                    "INSERT INTO user_settings (id, openai_key) VALUES (?, ?)",
+                        (g.user['id'], api_key),
+                    )
+            else:
+                current_app.logger.info(f"Pre-update key is {curr_key['openai_key']}")
+                db.execute(
+                    'UPDATE user_settings SET openai_key = ?'
+                    ' WHERE id = ?',
+                    (api_key, g.user['id'],)
+                )
             db.commit()
-            saved_key = True
-    return render_template('user_settings/openai_settings.html', saved_key=saved_key)
+
+            flash("Successfully Updated OpenAI API Key!", 'success')
+    return render_template('user_settings/openai_settings.html')
 
 @bp.route('/user_settings/custom_model_settings')
 @login_required

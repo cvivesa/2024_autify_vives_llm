@@ -16,7 +16,7 @@
           <div class="about"> Model: {{ chat.model }} on {{ chat['created'].strftime('%Y-%m-%d') }}</div>
            <ul>
             {% for entry in chat.entries %}
-              <li>{{ entry.type }}: {{ entry.body }}</li>
+              <li>{{ entry.type }}: <pre>{{ entry.body | nl2br | safe}}</pre></li>
             {% endfor %}
         </ul>
         </div>
