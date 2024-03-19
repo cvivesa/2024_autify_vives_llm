@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS chat;
+DROP TABLE IF EXISTS user_settings;
+
+CREATE TABLE user (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
+
+CREATE TABLE chat (
+    chat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL,
+    model TEXT NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES user (id)
+);
+
+CREATE TABLE chat_entry (
+  chat_entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  chat_id INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  body TEXT NOT NULL,
+  FOREIGN KEY (chat_id) REFERENCES chat (chat_id)
+);
+
+CREATE TABLE user_settings (
+    id INTEGER PRIMARY KEY,
+    openai_key TEXT ,
+    FOREIGN KEY (id) REFERENCES user (id)
+);

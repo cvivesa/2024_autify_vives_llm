@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>User Settings</h1>
+  <div class="sidebar">
+      <a href="{{ url_for('user_settings.openai_settings') }}">OpenAI Settings</a>
+      <a href="{{ url_for('user_settings.custom_model_settings') }}">Custom Model Settings</a>
+  </div>
+{% endblock %}
+
+<div class="main-content">
+    {% block content %}
+    <!-- This block will be overridden by specific settings content -->
+    {% endblock %}
+</div>

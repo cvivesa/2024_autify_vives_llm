@@ -1,0 +1,13 @@
+{% extends 'user_settings/base_settings.html' %}
+
+{% block content %}
+    <h1>OpenAI Settings</h1>
+    {% if saved_key is sameas true %}
+        <div class="success_flash">Successfully Updated OpenAI API Key!</div>
+    {% endif %}
+    <form method="post">
+        <label for="openai_key">OpenAI API Key:</label>
+        <input type="text" id="openai_key" name="openai_key" required>
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

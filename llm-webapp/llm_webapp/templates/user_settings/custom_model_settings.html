@@ -1,0 +1,10 @@
+{% extends 'user_settings/base_settings.html' %}
+
+{% block content %}
+    <h1>Custom Model Settings</h1>
+    <form>
+        <label for="openai_key">OpenAI API Key:</label>
+        <input type="text" id="openai_key" name="openai_key">
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
