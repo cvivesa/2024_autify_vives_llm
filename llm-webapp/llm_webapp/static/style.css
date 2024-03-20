@@ -103,3 +103,9 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+
+ .delete-button {
+      padding: 4px 8px; /* Make the button smaller */
+      margin-left: 20px; /* Add space between the title and the button */
+      font-size: 0.8rem; /* Smaller font size for the button */
+    }

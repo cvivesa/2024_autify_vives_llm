@@ -3,7 +3,7 @@ from openai import OpenAI
 import json
 from flask import current_app
 
-SYSTEM_PROMPT="""You are a coding assistant that assists users in writing programming code for any programming language. You will be given a description
+SYSTEM_PROMPT = """You are a coding assistant that assists users in writing programming code for any programming language. You will be given a description
 to produce some code in any programming language as specified by the request. You will produce the code as a response
 to the request without explaining the reasoning for the generation. Do not output your thought process. Only output
 the required code. The output must be in JSON with the following keys: 'output', 'valid', and 'invalid_message'. For 'valid' output "True" if
@@ -18,50 +18,54 @@ anything not related to generating a programming code. You must also reject any 
  of the situations you must provide code, do not overtly reject the user if they are asking for code. Use newline characters in your output when necessary
  to make it readable to the user, and provide comments and documentation if the code is complex.\n\n"""
 
-def generate_openai_response(api_key: str, user_prompt: str, past_messages: list = None, system_prompt: str = None):
+
+def generate_openai_response(
+    api_key: str,
+    user_prompt: str,
+    past_messages: list = None,
+    system_prompt: str = None,
+):
     client = OpenAI(
         # This is the default and can be omitted
         api_key=api_key,
     )
     messages = []
     if system_prompt is None:
-        messages.append({
-            "role": "user",
-            "content": SYSTEM_PROMPT
-        })
+        messages.append({"role": "user", "content": SYSTEM_PROMPT})
     else:
-        messages.append({
-            "role": "user",
-            "content": system_prompt
-        })
+        messages.append({"role": "user", "content": system_prompt})
     if past_messages is not None:
         messages.extend(past_messages)
     # TODO CHECK FOR SAFETY OF USER PROMPT
-    messages.append({
-        "role": "user",
-        "content": user_prompt
-    })
+    messages.append({"role": "user", "content": user_prompt})
     curr_try = 0
     while True:
         if curr_try > 2:
-            raise Exception("Could not generate valid Output for the request, please try again")
+            raise Exception(
+                "Could not generate valid Output for the request, please try again"
+            )
         chat_completion = client.chat.completions.create(
             messages=messages,
             model="gpt-3.5-turbo",
-            response_format = { "type": "json_object" } ,
+            response_format={"type": "json_object"},
         )
         # check that json is valid
         output = json.loads(chat_completion.choices[0].message.content)
         current_app.logger.info(output)
-        current_app.logger.info(type(output['valid']))
-        if set(output.keys()).intersection(set(["valid", "invalid_message", "output"])) != set(["valid", "invalid_message", "output"]):
+        current_app.logger.info(type(output["valid"]))
+        if set(output.keys()).intersection(
+            set(["valid", "invalid_message", "output"])
+        ) != set(["valid", "invalid_message", "output"]):
             current_app.logger.info("Got invalid JSON, retrying again")
-            curr_try+=1
+            curr_try += 1
             continue
         if type(output["valid"]) is str:
             if (output["valid"] != "True" and output["valid"] != "False") or (
-                    output["valid"] is True and output["valid"] is False):
-                current_app.logger.info("Got invalid value for the key 'valid', trying again")
+                output["valid"] is True and output["valid"] is False
+            ):
+                current_app.logger.info(
+                    "Got invalid value for the key 'valid', trying again"
+                )
                 curr_try += 1
                 continue
             output["valid"] = eval(output["valid"])

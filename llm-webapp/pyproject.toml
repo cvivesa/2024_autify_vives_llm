@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.0.2"
 openai = "^1.14.2"
+black = "^24.3.0"
 
 
 [build-system]

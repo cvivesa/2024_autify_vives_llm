@@ -103,6 +103,12 @@ have the LLM generate a new output based on the feedback,
 and this feedback chain can go forever (until the number of
 tokens exceed the context window)
 
+## Prompt Security
+
+The prompt is checked by chatGPT and it is set to be robust
+against any attempts to generate non-code outputs, and will
+raise an error message if the user tries to force the model
+to generate any output that is not code.
 
 ## Snippet Management
 
