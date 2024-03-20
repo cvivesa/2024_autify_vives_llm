@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 
 def nl2br(value):
-    return Markup(value.replace('\n', '<br>\n'))
+    return Markup(value.replace('\n', '<br>\n').replace('\\\n', '<br>\n'))
 def create_app(test_config=None):
 
     logging.basicConfig(level=logging.DEBUG)
