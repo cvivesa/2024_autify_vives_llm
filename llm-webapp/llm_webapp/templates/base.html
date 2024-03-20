@@ -1,0 +1,36 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - LLM Webapp</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+  <h1>LLM WebAPP</h1>
+  <ul>
+    {% if g.user %}
+      <li><a href="{{ url_for('index') }}">Home</a>
+      <li><span>{{ g.user['username'] }}</span>
+      <li><a href="{{ url_for('user_settings.user_settings') }}">User Settings</a>
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <li><a href="{{ url_for('auth.register') }}">Register</a>
+      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category=="error" %}
+          <div class="fail_flash">{{ message }}</div>
+        {% elif category=="success" %}
+          <div class="success_flash">{{ message }}</div>
+        {% else %}
+          <div class="flash">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</section>

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Past Snippets{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('chat.create') }}">Generate New Code Snippet</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {%for chat_id, chat in chats.items() %}
+    <article class="chat">
+      <header>
+        <div>
+          <h1><a class="action" href="{{ url_for('chat.load_chat', id=chat_id) }}">Chat - {{ chat_id }}</a></h1>
+          <div class="about"> Model: {{ chat.model }} on {{ chat['created'].strftime('%Y-%m-%d') }}</div>
+           <ul>
+            {% for entry in chat.entries %}
+              <li>{{ entry.type }}: <pre>{{ entry.body | nl2br | safe}}</pre></li>
+            {% endfor %}
+        </ul>
+        </div>
+      </header>
+
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
