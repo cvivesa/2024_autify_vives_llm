@@ -84,3 +84,22 @@ input[type=submit] { align-self: start; min-width: 10em; }
     white-space: pre-wrap; /* Preserves whitespace and allows wrapping */
     word-wrap: break-word; /* Ensures long words do not overflow */
 }
+
+.continue_conversation {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 95%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

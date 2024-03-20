@@ -18,7 +18,7 @@ anything not related to generating a programming code. You must also reject any 
  of the situations you must provide code, do not overtly reject the user if they are asking for code. Use newline characters in your output when necessary
  to make it readable to the user, and provide comments and documentation if the code is complex.\n\n"""
 
-def generate_openai_response(api_key: str, user_prompt: str, system_prompt: str = None):
+def generate_openai_response(api_key: str, user_prompt: str, past_messages: list = None, system_prompt: str = None):
     client = OpenAI(
         # This is the default and can be omitted
         api_key=api_key,
@@ -34,7 +34,8 @@ def generate_openai_response(api_key: str, user_prompt: str, system_prompt: str 
             "role": "user",
             "content": system_prompt
         })
-
+    if past_messages is not None:
+        messages.extend(past_messages)
     # TODO CHECK FOR SAFETY OF USER PROMPT
     messages.append({
         "role": "user",

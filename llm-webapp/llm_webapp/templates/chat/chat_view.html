@@ -2,6 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Chat - {{chat_data.chat_id}}{% endblock %}</h1>
+  <div class="about"> Model: {{ chat_data.model }} on {{ chat_data.created.strftime('%Y-%m-%d') }}</div>
 {% endblock %}
 
 {% block content %}
@@ -12,5 +13,18 @@
         <div class="entry_body">{{ chat_entry.body | nl2br }}</div>
     </div>
     {% endfor %}
+
+    <!-- Re-generate conversation section -->
+   <form action="{{ url_for('chat.regenerate_chat', id=chat_data.chat_id) }}" method="post">
+        <button type="submit" class="regenerate_button">Re-generate</button>
+    </form>
+
+
+     <div class="continue_conversation">
+          <form action="{{ url_for('chat.continue_chat', id=chat_data.chat_id) }}" method="post">
+            <textarea name="body" placeholder="Not happy with the output? Provide your feedback here and generate a new response" required></textarea>
+            <button type="submit" class="send_button">Send Feedback</button>
+          </form>
+        </div>
   </div>
 {% endblock %}

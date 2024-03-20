@@ -12,7 +12,7 @@
     <article class="chat">
       <header>
         <div>
-          <h1>Chat - {{ chat_id }}</h1>
+          <h1><a class="action" href="{{ url_for('chat.load_chat', id=chat_id) }}">Chat - {{ chat_id }}</a></h1>
           <div class="about"> Model: {{ chat.model }} on {{ chat['created'].strftime('%Y-%m-%d') }}</div>
            <ul>
             {% for entry in chat.entries %}
