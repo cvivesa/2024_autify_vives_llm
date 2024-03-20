@@ -117,4 +117,31 @@ snippets in the homepage, and click on any of the generated
 chats to get a clearer view. The user can also delete any
 past chats if needed.
 
+# How to run
 
+It is very easy to run with Docker. Firts you will run the
+following command in the same directory where the Dockerfile
+is:
+
+```
+docker build -t llm_webapp .
+```
+
+Once the image is built, you can run it via
+
+```
+ docker run -p 127.0.0.1:8000:5000 llm_webapp 
+```
+
+Since flask defaults to port 5000, we decide to link it to
+our local 8000 port. Navigating to `localhost:8000` will let
+you log in!
+
+# Logging in
+
+By default no users are provided, so feel free to register
+with a user and password. The registration page will allow
+you supply an OpenAI key to run the API requests (not
+provided with repo). Please contact me if this is an issue I
+do not mind lending the API key if it is for testing a few
+queries given how cheap gpt-3.5 turbo is.

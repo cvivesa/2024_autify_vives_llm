@@ -62,6 +62,7 @@ def openai_settings():
     return render_template("user_settings/openai_settings.html")
 
 
+# TODO
 @bp.route("/user_settings/custom_model_settings")
 @login_required
 def custom_model_settings():
